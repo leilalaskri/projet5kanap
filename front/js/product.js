@@ -8,13 +8,23 @@ let cardFetch = function() {
         .then((data) => {
             console.log(data);
             let img = document.getElementsByClassName("item__img");
-            img.innerHTML = data.imageUrl;
+            img.innerHTML = src = data.imageUrl;
+            alt = data.altTxt;
             let name = document.getElementById("title");
             name.innerHTML = data.name;
             let price = document.getElementById("price");
             price.innerHTML = data.price;
             let description = document.getElementById("description");
             description.innerHTML = data.description;
+            let color = document.getElementById("colors");
+
+
+            let lien = function() {
+                boutton.innerHTML = "./cart.html";
+
+            };
+            const boutton = document.getElementById("addToCart");
+            boutton.addEventListener('click', lien);
         });
 };
 cardFetch();
