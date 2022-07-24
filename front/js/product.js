@@ -2,7 +2,7 @@ let cardFetch = function() {
     const str = window.location;
     const url = new URL(str);
     const id = url.searchParams.get("id");
-
+    console.log(id);
     fetch("http://localhost:3000/api/products/415b7cacb65d43b2b5c1ff70f3393ad1")
         .then((response) => response.json())
         .then((data) => {
@@ -20,7 +20,7 @@ let cardFetch = function() {
 
 
             let lien = function() {
-                boutton.innerHTML = "./cart.html";
+                window.location = "./cart.html";
 
             };
             const boutton = document.getElementById("addToCart");
