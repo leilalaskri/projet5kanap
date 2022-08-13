@@ -1,3 +1,28 @@
 let cart__items = document.getElementById("cart__items");
 let article = document.createElement("article");
 cart__items.appendChild(article);
+article.classList.add("cart__item");
+let cart = document.getElementsByClassName("cart__item")[0];
+let div = document.createElement("div");
+cart.appendChild(div);
+div.classList.add("cart__item__img");
+let divim = document.getElementsByClassName("cart__item__img")[0]; //recuperer le premier elt
+let img = document.createElement("img");
+divim.appendChild(img);
+let divcart = document.getElementsByClassName("cart__item")[0];
+div = document.createElement("div");
+divcart.appendChild(div);
+div.classList.add("cart__item__content");
+let divcar = document.getElementsByClassName("cart__item__content")[0];
+div = document.createElement("div");
+divcar.appendChild(div);
+div.classList.add("cart__item__content__description");
+let newh = document.createElement("h2");
+newh.textContent = "titre";
+div.appendChild(newh);
+let newp = document.createElement("p");
+newp.textContent = "titre";
+div.appendChild(newp);
+newp = document.createElement("p");
+newp.textContent = "titre";
+div.appendChild(newp);
