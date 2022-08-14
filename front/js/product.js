@@ -2,6 +2,7 @@ const str = window.location;
 const url = new URL(str);
 const id = url.searchParams.get("id");
 console.log(id);
+
 let cardFetch = function() {
 
     fetch(`http://localhost:3000/api/products/${id}`)
@@ -31,32 +32,39 @@ let cardFetch = function() {
 
             };
 
-            function quantiteValue() {
-                let qte = document.getElementById("quantity");
-                return qte.value;
-            }
 
-
-            function colorValue() {
-                let color = document.getElementById("colors");
-                return color.value;
-            }
-            let addpanier = function(id, qte, color) {
-                console.log(id);
-                qte = quantiteValue();
-                console.log(qte);
-                color = colorValue();
-                console.log(color);
-                let tab = [id, qte, color];
-                console.log(tab);
-                let objLinea = JSON.stringify(tab);
-                localStorage.setItem("panier", objLinea);
-                console.log(localStorage.getItem("panier"));
-            }
             const boutton = document.getElementById("addToCart");
             boutton.addEventListener('click', addpanier);
-            const bouton = document.getElementById("addToCart");
-            boutton.addEventListener('click', lien);
+
         });
 };
 cardFetch();
+let addpanier = function() {
+    qte = quantiteValue();
+    color = colorValue();
+    let produit = {
+        id: id,
+        quantite: qte,
+        couleur: color,
+    };
+    let tab = [produit];
+    console.log(tab);
+    let objLinea = JSON.stringify(produit);
+    localStorage.setItem("panier", objLinea);
+    console.log(localStorage.getItem("panier"));
+    objLinea = localStorage.getItem("panier");
+    produit = JSON.parse(objLinea);
+
+
+
+}
+
+function quantiteValue() {
+    let qte = document.getElementById("quantity");
+    return qte.value;
+}
+
+function colorValue() {
+    let color = document.getElementById("colors");
+    return color.value;
+}
