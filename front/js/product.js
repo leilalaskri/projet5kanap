@@ -8,7 +8,7 @@ let cardFetch = function() {
     fetch(`http://localhost:3000/api/products/${id}`)
         .then((response) => response.json())
         .then((data) => {
-            console.log(data);
+
             let divimg = document.getElementsByClassName("item__img")[0]; //recuperer le premier elt
             let img = document.createElement("img");
             img.alt = data.altTxt;
@@ -32,39 +32,66 @@ let cardFetch = function() {
 
             };
 
+            function quantiteValue() {
+                let qte = document.getElementById("quantity");
+                return qte.value;
+            }
+
+            function colorValue() {
+                let color = document.getElementById("colors");
+                return colors.value;
+            }
 
             const boutton = document.getElementById("addToCart");
-            boutton.addEventListener('click', addpanier);
+            let qty = quantiteValue();
+            let color = colorValue();
+
+
+            boutton.addEventListener("click", () => {
+                let qty = quantiteValue();
+                let color = colorValue();
+                addCart(id, color, qty);
+
+            });
 
         });
 };
 cardFetch();
-let addpanier = function() {
-    qte = quantiteValue();
-    color = colorValue();
-    let produit = {
-        id: id,
-        quantite: qte,
-        couleur: color,
-    };
-    let tab = [produit];
-    console.log(tab);
-    let objLinea = JSON.stringify(produit);
-    localStorage.setItem("panier", objLinea);
-    console.log(localStorage.getItem("panier"));
-    objLinea = localStorage.getItem("panier");
-    produit = JSON.parse(objLinea);
 
-
+function comparaison() {
+    let tab = [];
+    if (localStorage.getItem("panier") != null) {
+        tab = JSON.parse(localStorage.getItem("panier"));
+    }
+    return tab;
 
 }
 
-function quantiteValue() {
-    let qte = document.getElementById("quantity");
-    return qte.value;
-}
+function addCart(id, color, qty) {
 
-function colorValue() {
-    let color = document.getElementById("colors");
-    return color.value;
+
+    if (qty <= 0 || color == "") {
+        return;
+    }
+    let tab = comparaison();
+    if (tab.length == 0) {
+        tab = [
+            [id, color, qty]
+        ];
+
+    } else {
+        let bool = false;
+        for (let i = 0; i < tab.length; i++) {
+            if (id === tab[i][0] && color === tab[i][1]) {
+                bool = true;
+                tab[i][2] += qty;
+
+            }
+        }
+        if (bool == false) {
+            let tabl = [id, color, qty];
+            tab.push(tabl);
+        }
+    }
+    localStorage.setItem("panier", JSON.stringify(tab));
 }
