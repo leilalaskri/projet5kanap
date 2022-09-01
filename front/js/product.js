@@ -58,7 +58,7 @@ let cardFetch = function() {
 };
 cardFetch();
 
-function comparaison() {
+function chargement() {
     let tab = [];
     if (localStorage.getItem("panier") != null) {
         tab = JSON.parse(localStorage.getItem("panier"));
@@ -73,23 +73,21 @@ function addCart(id, color, qty) {
     if (qty <= 0 || color == "") {
         return;
     }
-    let tab = comparaison();
+    let tab = chargement();
     if (tab.length == 0) {
         tab = [
-            [id, color, qty]
+            { id, color, qty }
         ];
 
     } else {
-        let bool = false;
-        for (let i = 0; i < tab.length; i++) {
-            if (id === tab[i][0] && color === tab[i][1]) {
-                bool = true;
-                tab[i][2] += qty;
 
-            }
-        }
-        if (bool == false) {
-            let tabl = [id, color, qty];
+
+        const article = tab.find(element => id === element.id && color === element.color)
+
+        if (article) {
+            article.qty += qty;
+        } else {
+            let tabl = { id, color, qty };
             tab.push(tabl);
         }
     }
