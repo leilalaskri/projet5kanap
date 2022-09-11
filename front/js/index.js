@@ -8,7 +8,7 @@ let cardsFetch = function() {
 
             for (i = 0; i < data.length; i++) {
                 const productCard = `
-          <a href="./product.html?id=${data[i]._id}">
+          <a href="./product.html?id=${data[i].id}">
             <article>
               <img
                 src="${data[i].imageUrl}"

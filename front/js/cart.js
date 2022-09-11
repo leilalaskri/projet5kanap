@@ -62,7 +62,7 @@ function createArticle(src, alt, id, color, title, price, quantite) {
     descriptionDiv.appendChild(nom);
     const couleur = createTitle('p', color)
     descriptionDiv.appendChild(couleur);
-    const prix = createTitle('p', price)
+    const prix = createTitle('p', price + "euro")
     descriptionDiv.appendChild(prix);
     const settingsDiv = createDivContainer('cart__item__content__settings')
     contentDiv.appendChild(settingsDiv);
@@ -72,6 +72,11 @@ function createArticle(src, alt, id, color, title, price, quantite) {
     settingDiv.appendChild(quantites);
     const inputDiv = createinput(quantite)
     settingDiv.appendChild(inputDiv);
+    inputDiv.addEventListener("change", () => {
+        console.log("message de test", id, color, inputDiv.value)
+        changeQuantity(id, color, inputDiv.value);
+
+    })
     const deleteDiv = createDivContainer('cart__item__content__settings__delete')
 
     article.appendChild(deleteDiv);
@@ -91,9 +96,10 @@ function affichage() {
 
     if (localStorage.getItem("panier") != null) {
         for (let i = 0; i < tab.length; i++) {
-            let id = tab[i][0];
-            let qty = tab[i][2]
-            let color = tab[i][1];
+            let id = tab[i].id;
+            let qty = tab[i].qty;
+            let color = tab[i].color;
+            console.log("id produit", tab[i].id)
             let carFetch = function() {
                 fetch(`http://localhost:3000/api/products/${id}`)
                     .then((response) => response.json())
@@ -101,6 +107,7 @@ function affichage() {
 
                         let article = createArticle(data.imageUrl, data.altTxt, id, color, data.name, data.price, qty)
                         cart__items.appendChild(article);
+
 
 
 
@@ -112,15 +119,16 @@ function affichage() {
 
     };
 };
+
 affichage();
 
 function deletelement(id, color) {
     let tab = chargement();
     for (i = 0; i < tab.length; i++) {
-        if (id === tab[i][0] && color === tab[i][1]) {
+        if (id === tab[i].id && color === tab[i].color) {
             tab.splice(i, 1);
             localStorage.setItem("panier", JSON.stringify(tab));
-
+            location.reload();
         }
     }
 }
@@ -128,25 +136,20 @@ function deletelement(id, color) {
 function changeQuantity(id, color, qty) {
     let tab = chargement();
     for (let i = 0; i < tab.length; i++) {
-        if (id === tab[i][0] && color === tab[i][1]) {
-            tab[i][2] = qty;
+        if (id === tab[i].id && color === tab[i].color) {
+            tab[i].qty = qty;
         }
         localStorage.setItem("panier", JSON.stringify(tab));
 
     }
 }
-//bouttonchangement.addEventListener("click", () => {
-// let qty = quantiteValue();
-// let color = colorValue();
-// changeQuantity(id, color, qty);
 
-//})
 
 const emailErrorMsg = document.getElementById("emailErrorMsg");
 
 function validateEmail(mail) {
-    const regexMail =
-        /^$/;
+    const regexMail = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/;
+
     if (regexMail.test(mail) == false) {
         return false;
     } else {
@@ -156,7 +159,7 @@ function validateEmail(mail) {
 }
 
 
-const regexName = /^$/;
+const regexName = /^[a-zA-Z]+$/;
 const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 
 function validateFirstName(prenom) {
@@ -181,7 +184,7 @@ function validateLastName(nom) {
 const cityErrorMsg = document.getElementById("cityErrorMsg");
 
 function validateCity(ville) {
-    if (regexName.test(ville) == false) {
+    if (!regexName.test(ville)) {
         return false;
     } else {
         cityErrorMsg.innerHTML = null;
@@ -221,4 +224,40 @@ function message() {
         }
         return;
     }
+}
+let BouttonCommander = document.getElementsByClassName("cart__order__form__submit")
+BouttonCommander.addEventListener("click", () => {
+    message();
+    let jsonData = contactProduct();
+
+
+    let response = fetch('/article/fetch/post/user', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(jsonData)
+    });
+
+    let result = response.json();
+    alert(result.message);
+
+});
+
+function contactProduct() {
+    let contact = {
+        firstName: prenom.value,
+        lastName: nom.value,
+        address: adresse.value,
+        city: ville.value,
+        email: mail.value,
+    };
+    let tab = chargement();
+    let products = [];
+
+    for (i = 0; i < tab.length; i++) {
+        products.push(tab[i].id);
+    }
+    let jsonData = JSON.stringify({ contact, products });
+    return jsonData;
 }
