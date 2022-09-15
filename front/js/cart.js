@@ -159,7 +159,7 @@ function validateEmail(mail) {
 }
 
 
-const regexName = /^[a-zA-Z]+$/;
+const regexName = /^[a-zA-Z ]+$/;
 const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 
 function validateFirstName(prenom) {
@@ -225,24 +225,30 @@ function message() {
         return;
     }
 }
-let BouttonCommander = document.getElementsByClassName("cart__order__form__submit")
-BouttonCommander.addEventListener("click", () => {
+let BouttonCommander = document.getElementById("order")
+BouttonCommander.addEventListener("click", (e) => {
+    e.preventDefault();
     message();
     let jsonData = contactProduct();
+    fetch('http://localhost:3000/api/products/order', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
+
+        })
+        .then((response) => response.json())
+        .then((data) => {
+
+            localStorage.setItem("orderId", data.orderId);
+            window.location = "./Confirmation.html";
 
 
-    let response = fetch('/article/fetch/post/user', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(jsonData)
-    });
 
-    let result = response.json();
-    alert(result.message);
 
-});
+        });
+})
 
 function contactProduct() {
     let contact = {
