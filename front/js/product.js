@@ -58,7 +58,7 @@ let cardFetch = function() {
 };
 cardFetch();
 
-function chargement() {
+function FillingTab() {
     let tab = [];
     if (localStorage.getItem("panier") != null) {
         tab = JSON.parse(localStorage.getItem("panier"));
@@ -73,7 +73,7 @@ function addCart(id, color, qty) {
     if (qty <= 0 || color == "") {
         return;
     }
-    let tab = chargement();
+    let tab = FillingTab();
     if (tab.length == 0) {
         tab = [
             { id, color, qty }

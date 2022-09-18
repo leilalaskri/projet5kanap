@@ -28,11 +28,11 @@ function createinput(quantite) {
     input.value = quantite
     return input
 }
-console.log(localStorage.getItem("panier"));
+
 objLinea = localStorage.getItem("panier");
 produit = JSON.parse(objLinea);
-
-function chargement() {
+//remplir le tableau par la liste de produits dans le panier
+function FillingTab() {
     let tab = [];
     if (localStorage.getItem("panier") != null) {
         tab = JSON.parse(localStorage.getItem("panier"));
@@ -62,7 +62,7 @@ function createArticle(src, alt, id, color, title, price, quantite) {
     descriptionDiv.appendChild(nom);
     const couleur = createTitle('p', color)
     descriptionDiv.appendChild(couleur);
-    const prix = createTitle('p', price + "euro")
+    const prix = createTitle('p', price + "€")
     descriptionDiv.appendChild(prix);
     const settingsDiv = createDivContainer('cart__item__content__settings')
     contentDiv.appendChild(settingsDiv);
@@ -73,7 +73,7 @@ function createArticle(src, alt, id, color, title, price, quantite) {
     const inputDiv = createinput(quantite)
     settingDiv.appendChild(inputDiv);
     inputDiv.addEventListener("change", () => {
-        console.log("message de test", id, color, inputDiv.value)
+
         changeQuantity(id, color, inputDiv.value);
 
     })
@@ -91,7 +91,7 @@ function createArticle(src, alt, id, color, title, price, quantite) {
 }
 
 function affichage() {
-    let tab = chargement();
+    let tab = FillingTab();
     let cart__items = document.getElementById("cart__items");
 
     if (localStorage.getItem("panier") != null) {
@@ -99,7 +99,7 @@ function affichage() {
             let id = tab[i].id;
             let qty = tab[i].qty;
             let color = tab[i].color;
-            console.log("id produit", tab[i].id)
+
             let carFetch = function() {
                 fetch(`http://localhost:3000/api/products/${id}`)
                     .then((response) => response.json())
@@ -123,7 +123,7 @@ function affichage() {
 affichage();
 
 function deletelement(id, color) {
-    let tab = chargement();
+    let tab = FillingTab();
     for (i = 0; i < tab.length; i++) {
         if (id === tab[i].id && color === tab[i].color) {
             tab.splice(i, 1);
@@ -134,7 +134,7 @@ function deletelement(id, color) {
 }
 
 function changeQuantity(id, color, qty) {
-    let tab = chargement();
+    let tab = FillingTab();
     for (let i = 0; i < tab.length; i++) {
         if (id === tab[i].id && color === tab[i].color) {
             tab[i].qty = qty;
@@ -148,7 +148,7 @@ function changeQuantity(id, color, qty) {
 const emailErrorMsg = document.getElementById("emailErrorMsg");
 
 function validateEmail(mail) {
-    const regexMail = /^[a-zA-Z0-9.! #$%&'*+/=? ^_`{|}~-]+@[a-zA-Z0-9-]+(?:\. [a-zA-Z0-9-]+)*$/;
+    const regexMail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (regexMail.test(mail) == false) {
         return false;
@@ -222,13 +222,17 @@ function message() {
         if (city == false) {
             cityErrorMsg.innerHTML = "Entrez une commune valide ";
         }
-        return;
+
+        return
     }
 }
 let BouttonCommander = document.getElementById("order")
 BouttonCommander.addEventListener("click", (e) => {
     e.preventDefault();
+
     message();
+
+
     let jsonData = contactProduct();
     fetch('http://localhost:3000/api/products/order', {
             method: 'POST',
@@ -258,7 +262,7 @@ function contactProduct() {
         city: ville.value,
         email: mail.value,
     };
-    let tab = chargement();
+    let tab = FillingTab();
     let products = [];
 
     for (i = 0; i < tab.length; i++) {
