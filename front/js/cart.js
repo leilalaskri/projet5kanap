@@ -198,7 +198,7 @@ function affichage() {
     };
 };
 
-function message() {
+function MessageError() {
 
     let email = validateEmail(mail.value);
     let firstName = validateFirstName(prenom.value);
@@ -241,9 +241,9 @@ BouttonCommander.addEventListener("click", (e) => {
     e.preventDefault();
 
 
-    var vall = message();
+    var val = MessageError();
 
-    if (vall == true) {
+    if (val == true) {
 
         let jsonData = contactProduct();
         fetch('http://localhost:3000/api/products/order', {

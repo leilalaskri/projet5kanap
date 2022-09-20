@@ -2,7 +2,28 @@ const str = window.location;
 const url = new URL(str);
 const id = url.searchParams.get("id");
 
+function addCart(id, color, qty) {
 
+    if (qty <= 0 || color == "") {
+        return;
+    }
+    let tab = FillingTab();
+    if (tab.length == 0) {
+        tab = [
+            { id, color, qty }
+        ];
+
+    } else {
+        const article = tab.find(element => id === element.id && color === element.color)
+        if (article) {
+            article.qty += qty;
+        } else {
+            let tabl = { id, color, qty };
+            tab.push(tabl);
+        }
+    }
+    localStorage.setItem("panier", JSON.stringify(tab));
+}
 let cardFetch = function() {
 
     fetch(`http://localhost:3000/api/products/${id}`)
@@ -57,27 +78,3 @@ let cardFetch = function() {
         });
 };
 cardFetch();
-
-
-function addCart(id, color, qty) {
-
-    if (qty <= 0 || color == "") {
-        return;
-    }
-    let tab = FillingTab();
-    if (tab.length == 0) {
-        tab = [
-            { id, color, qty }
-        ];
-
-    } else {
-        const article = tab.find(element => id === element.id && color === element.color)
-        if (article) {
-            article.qty += qty;
-        } else {
-            let tabl = { id, color, qty };
-            tab.push(tabl);
-        }
-    }
-    localStorage.setItem("panier", JSON.stringify(tab));
-}
