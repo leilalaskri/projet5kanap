@@ -108,7 +108,7 @@ const emailErrorMsg = document.getElementById("emailErrorMsg");
 function validateEmail(mail) {
     const regexMail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-    if (regexMail.test(mail) == false) {
+    if (!regexMail.test(mail)) {
         return false;
     } else {
         emailErrorMsg.innerHTML = null;
@@ -122,7 +122,7 @@ const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 
 function validateFirstName(prenom) {
 
-    if (regexName.test(prenom) == false) {
+    if (!regexName.test(prenom)) {
         return false;
     } else {
         firstNameErrorMsg.innerHTML = null;
@@ -132,7 +132,7 @@ function validateFirstName(prenom) {
 const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
 
 function validateLastName(nom) {
-    if (regexName.test(nom) == false) {
+    if (!regexName.test(nom)) {
         return false;
     } else {
         lastNameErrorMsg.innerHTML = null;
