@@ -1,3 +1,25 @@
+function deletelement(id, color) {
+    let tab = FillingTab();
+    for (i = 0; i < tab.length; i++) {
+        if (id === tab[i].id && color === tab[i].color) {
+            tab.splice(i, 1);
+            localStorage.setItem("panier", JSON.stringify(tab));
+            location.reload();
+        }
+    }
+}
+
+function changeQuantity(id, color, qty) {
+    let tab = FillingTab();
+    for (let i = 0; i < tab.length; i++) {
+        if (id === tab[i].id && color === tab[i].color) {
+            tab[i].qty = qty;
+        }
+        localStorage.setItem("panier", JSON.stringify(tab));
+
+    }
+}
+
 function createImage(src, alt) {
     const img = document.createElement('img')
     img.src = src
@@ -81,62 +103,6 @@ function createArticle(src, alt, id, color, title, price, quantite) {
     })
     return article;
 }
-
-function affichage() {
-    let tab = FillingTab();
-    let cart__items = document.getElementById("cart__items");
-
-    if (localStorage.getItem("panier") != null) {
-        for (let i = 0; i < tab.length; i++) {
-            let id = tab[i].id;
-            let qty = tab[i].qty;
-            let color = tab[i].color;
-
-            let carFetch = function() {
-                fetch(`http://localhost:3000/api/products/${id}`)
-                    .then((response) => response.json())
-                    .then((data) => {
-
-                        let article = createArticle(data.imageUrl, data.altTxt, id, color, data.name, data.price, qty)
-                        cart__items.appendChild(article);
-
-
-
-
-                    });
-            };
-            carFetch();
-        }
-
-
-    };
-};
-
-affichage();
-
-function deletelement(id, color) {
-    let tab = FillingTab();
-    for (i = 0; i < tab.length; i++) {
-        if (id === tab[i].id && color === tab[i].color) {
-            tab.splice(i, 1);
-            localStorage.setItem("panier", JSON.stringify(tab));
-            location.reload();
-        }
-    }
-}
-
-function changeQuantity(id, color, qty) {
-    let tab = FillingTab();
-    for (let i = 0; i < tab.length; i++) {
-        if (id === tab[i].id && color === tab[i].color) {
-            tab[i].qty = qty;
-        }
-        localStorage.setItem("panier", JSON.stringify(tab));
-
-    }
-}
-
-
 const emailErrorMsg = document.getElementById("emailErrorMsg");
 
 function validateEmail(mail) {
@@ -189,7 +155,48 @@ const ville = document.getElementById("city");
 const adresse = document.getElementById("address");
 const mail = document.getElementById("email");
 
+function contactProduct() {
+    let contact = {
+        firstName: prenom.value,
+        lastName: nom.value,
+        address: adresse.value,
+        city: ville.value,
+        email: mail.value,
+    };
+    let tab = FillingTab();
+    let products = [];
 
+    for (i = 0; i < tab.length; i++) {
+        products.push(tab[i].id);
+    }
+    let jsonData = JSON.stringify({ contact, products });
+    return jsonData;
+}
+
+function affichage() {
+    let tab = FillingTab();
+    let cart__items = document.getElementById("cart__items");
+
+    if (localStorage.getItem("panier") != null) {
+        for (let i = 0; i < tab.length; i++) {
+            let id = tab[i].id;
+            let qty = tab[i].qty;
+            let color = tab[i].color;
+
+            let carFetch = function() {
+                fetch(`http://localhost:3000/api/products/${id}`)
+                    .then((response) => response.json())
+                    .then((data) => {
+
+                        let article = createArticle(data.imageUrl, data.altTxt, id, color, data.name, data.price, qty)
+                        cart__items.appendChild(article);
+                    });
+            };
+            carFetch();
+        }
+
+    };
+};
 
 function message() {
 
@@ -227,6 +234,8 @@ function message() {
     return true
 }
 
+affichage();
+
 let BouttonCommander = document.getElementById("order")
 BouttonCommander.addEventListener("click", (e) => {
     e.preventDefault();
@@ -257,21 +266,3 @@ BouttonCommander.addEventListener("click", (e) => {
             });
     }
 })
-
-function contactProduct() {
-    let contact = {
-        firstName: prenom.value,
-        lastName: nom.value,
-        address: adresse.value,
-        city: ville.value,
-        email: mail.value,
-    };
-    let tab = FillingTab();
-    let products = [];
-
-    for (i = 0; i < tab.length; i++) {
-        products.push(tab[i].id);
-    }
-    let jsonData = JSON.stringify({ contact, products });
-    return jsonData;
-}
