@@ -29,19 +29,6 @@ function createinput(quantite) {
     return input
 }
 
-objLinea = localStorage.getItem("panier");
-produit = JSON.parse(objLinea);
-//remplir le tableau par la liste de produits dans le panier
-function FillingTab() {
-    let tab = [];
-    if (localStorage.getItem("panier") != null) {
-        tab = JSON.parse(localStorage.getItem("panier"));
-    }
-    return tab;
-
-}
-
-
 function createArticle(src, alt, id, color, title, price, quantite) {
     const article = document.createElement("article");
     article.dataset.id = id
@@ -56,37 +43,42 @@ function createArticle(src, alt, id, color, title, price, quantite) {
 
     const contentDiv = createDivContainer('cart__item__content')
     article.appendChild(contentDiv);
+
     const descriptionDiv = createDivContainer('cart__item__content__description')
     contentDiv.appendChild(descriptionDiv);
+
     const nom = createTitle('h2', title)
     descriptionDiv.appendChild(nom);
     const couleur = createTitle('p', color)
     descriptionDiv.appendChild(couleur);
+
     const prix = createTitle('p', price + "€")
     descriptionDiv.appendChild(prix);
+
     const settingsDiv = createDivContainer('cart__item__content__settings')
     contentDiv.appendChild(settingsDiv);
+
     const settingDiv = createDivContainer('cart__item__content__settings__quantity')
     settingsDiv.appendChild(settingDiv);
-    const quantites = createTitle('p', ("Qté :"), quantite)
+
+    const quantites = createTitle('p', "Qté :")
     settingDiv.appendChild(quantites);
+
     const inputDiv = createinput(quantite)
     settingDiv.appendChild(inputDiv);
+
     inputDiv.addEventListener("change", () => {
-
         changeQuantity(id, color, inputDiv.value);
-
     })
     const deleteDiv = createDivContainer('cart__item__content__settings__delete')
-
     article.appendChild(deleteDiv);
+
     const delet = createTitle('p', "supprimer")
     deleteDiv.appendChild(delet);
     delet.classList.add("deleteItem");
     delet.addEventListener('click', () => {
         deletelement(id, color)
     })
-
     return article;
 }
 
@@ -200,6 +192,7 @@ const mail = document.getElementById("email");
 
 
 function message() {
+
     let email = validateEmail(mail.value);
     let firstName = validateFirstName(prenom.value);
     let lastName = validateLastName(nom.value);
@@ -210,48 +203,59 @@ function message() {
         lastName == false ||
         city == false
     ) {
+
         if (email == false) {
             emailErrorMsg.innerHTML = "Entrez une adresse e-mail valide.";
+
         }
         if (firstName == false) {
             firstNameErrorMsg.innerHTML = "Entrez un prénom valide ";
+
         }
         if (lastName == false) {
             lastNameErrorMsg.innerHTML = "Entrez un nom valide ";
+
         }
         if (city == false) {
             cityErrorMsg.innerHTML = "Entrez une commune valide ";
+
         }
 
-        return
+
+        return false
     }
+    return true
 }
+
 let BouttonCommander = document.getElementById("order")
 BouttonCommander.addEventListener("click", (e) => {
     e.preventDefault();
 
-    message();
+
+    var vall = message();
+
+    if (vall == true) {
+
+        let jsonData = contactProduct();
+        fetch('http://localhost:3000/api/products/order', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: jsonData
+
+            })
+            .then((response) => response.json())
+            .then((data) => {
+
+                localStorage.setItem("orderId", data.orderId);
+                window.location = "./confirmation.html";
 
 
-    let jsonData = contactProduct();
-    fetch('http://localhost:3000/api/products/order', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: jsonData
-
-        })
-        .then((response) => response.json())
-        .then((data) => {
-
-            localStorage.setItem("orderId", data.orderId);
-            window.location = "./Confirmation.html";
 
 
-
-
-        });
+            });
+    }
 })
 
 function contactProduct() {

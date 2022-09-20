@@ -58,17 +58,8 @@ let cardFetch = function() {
 };
 cardFetch();
 
-function FillingTab() {
-    let tab = [];
-    if (localStorage.getItem("panier") != null) {
-        tab = JSON.parse(localStorage.getItem("panier"));
-    }
-    return tab;
-
-}
 
 function addCart(id, color, qty) {
-
 
     if (qty <= 0 || color == "") {
         return;
@@ -80,10 +71,7 @@ function addCart(id, color, qty) {
         ];
 
     } else {
-
-
         const article = tab.find(element => id === element.id && color === element.color)
-
         if (article) {
             article.qty += qty;
         } else {
