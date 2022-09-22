@@ -109,6 +109,7 @@ function validateEmail(mail) {
     const regexMail = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
     if (!regexMail.test(mail)) {
+        emailErrorMsg.innerHTML = "Entrez une adresse e-mail valide.";
         return false;
     } else {
         emailErrorMsg.innerHTML = null;
@@ -123,6 +124,7 @@ const firstNameErrorMsg = document.getElementById("firstNameErrorMsg");
 function validateFirstName(prenom) {
 
     if (!regexName.test(prenom)) {
+        firstNameErrorMsg.innerHTML = "Entrez un prénom valide ";
         return false;
     } else {
         firstNameErrorMsg.innerHTML = null;
@@ -133,6 +135,7 @@ const lastNameErrorMsg = document.getElementById("lastNameErrorMsg");
 
 function validateLastName(nom) {
     if (!regexName.test(nom)) {
+        lastNameErrorMsg.innerHTML = "Entrez un nom valide ";
         return false;
     } else {
         lastNameErrorMsg.innerHTML = null;
@@ -143,6 +146,7 @@ const cityErrorMsg = document.getElementById("cityErrorMsg");
 
 function validateCity(ville) {
     if (!regexName.test(ville)) {
+        cityErrorMsg.innerHTML = "Entrez une commune valide ";
         return false;
     } else {
         cityErrorMsg.innerHTML = null;
@@ -204,37 +208,17 @@ function MessageError() {
     let firstName = validateFirstName(prenom.value);
     let lastName = validateLastName(nom.value);
     let city = validateCity(ville.value);
-    if (
-        email == false ||
-        firstName == false ||
-        lastName == false ||
-        city == false
+    if (!email ||
+        !firstName ||
+        !lastName ||
+        !city
     ) {
-
-        if (email == false) {
-            emailErrorMsg.innerHTML = "Entrez une adresse e-mail valide.";
-
-        }
-        if (firstName == false) {
-            firstNameErrorMsg.innerHTML = "Entrez un prénom valide ";
-
-        }
-        if (lastName == false) {
-            lastNameErrorMsg.innerHTML = "Entrez un nom valide ";
-
-        }
-        if (city == false) {
-            cityErrorMsg.innerHTML = "Entrez une commune valide ";
-
-        }
-
-
         return false
     }
     return true
 }
 
-affichage();
+
 
 let BouttonCommander = document.getElementById("order")
 BouttonCommander.addEventListener("click", (e) => {
