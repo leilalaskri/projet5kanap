@@ -201,6 +201,7 @@ function affichage() {
 
     };
 };
+affichage()
 
 function MessageError() {
 
